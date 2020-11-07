@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace Grigorov.Controllers
 {
-	public abstract class Controller
+	public static class Controller
 	{
-		static List<Controller> _allControllers = new List<Controller>();
+		static List<object> _allControllers = new List<object>();
 
-		public static List<Controller> AllControllers
+		public static List<object> AllControllers
 		{
 			get
 			{
@@ -21,35 +21,17 @@ namespace Grigorov.Controllers
 			}
 		}
 
-		public virtual void OnAwake() { }
-
-		public virtual void OnStart() { }
-
-		public virtual void OnUpdate() { }
-
-		public virtual void OnFixedUpdate() { }
-
-		public virtual void OnDestroy() { }
-
-		public static T Get<T>() where T : Controller
+		public static T Get<T>() where T : class
 		{
 			var controller = AllControllers.Find(c => c is T);
-			return (controller != null) ? controller as T : null;
+			return (controller != null) ? controller as T : default(T);
 		}
 
-		static List<Controller> CreateAllControllers()
+		static List<object> CreateAllControllers()
 		{
-
-			var asmbly = Assembly.GetExecutingAssembly();
-			var typeList = asmbly.GetTypes().Where(
-					t => t.GetCustomAttributes(typeof(ControllerAttribute), true).Length > 0
-			).ToList();
-
-			var outType = typeof(Controller);
-			return Assembly.GetAssembly(outType).GetTypes()
-					.Where(type => type.IsSubclassOf(outType))
-					.Select(type => Activator.CreateInstance(type) as Controller)
-					.ToList();
+			return Assembly.GetExecutingAssembly().GetTypes()
+					.Where(t => t.GetCustomAttributes(typeof(ControllerAttribute), true).Length > 0)
+					.Select(type => Activator.CreateInstance(type)).ToList();
 		}
 	}
 }
