@@ -39,6 +39,12 @@ namespace Grigorov.Controllers
 
 		static List<Controller> CreateAllControllers()
 		{
+
+			var asmbly = Assembly.GetExecutingAssembly();
+			var typeList = asmbly.GetTypes().Where(
+					t => t.GetCustomAttributes(typeof(ControllerAttribute), true).Length > 0
+			).ToList();
+
 			var outType = typeof(Controller);
 			return Assembly.GetAssembly(outType).GetTypes()
 					.Where(type => type.IsSubclassOf(outType))
