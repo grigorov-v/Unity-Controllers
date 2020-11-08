@@ -7,7 +7,7 @@ namespace Grigorov.Controllers
 {
 	public class ControllerForComponent<T> : IControllerForComponent where T : Component
 	{
-		List<T> _components = new List<T>();
+		protected List<T> _components = new List<T>();
 
 		public void Init()
 		{
@@ -19,13 +19,18 @@ namespace Grigorov.Controllers
 			_components.Clear();
 		}
 
-		protected void RegisterComponent(T component)
+		protected void AddComponent(T component)
 		{
 			if (_components.Exists(c => c == component))
 			{
 				return;
 			}
 			_components.Add(component);
+		}
+
+		protected void RemoveComponent(T component)
+		{
+			_components.Remove(component);
 		}
 
 		protected void CallAction(Action<T> action)
