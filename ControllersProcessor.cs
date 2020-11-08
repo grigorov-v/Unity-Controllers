@@ -13,11 +13,14 @@ namespace Grigorov.Controllers
 		List<IFixedUpdate> _fixedUpdates = new List<IFixedUpdate>();
 		List<IDestroy>     _destroes     = new List<IDestroy>();
 
+		List<IControllerForComponent> _controllersForComponent = new List<IControllerForComponent>();
+
 		List<object> AllControllers => Controller.AllControllers;
 
 		void Awake()
 		{
 			AllControllers.ForEach(c => RegisterController(c));
+			_controllersForComponent.ForEach(cfc => cfc?.Init());
 			_awakes.ForEach(a => a?.OnAwake());
 			Instance = this;
 		}
@@ -40,33 +43,37 @@ namespace Grigorov.Controllers
 		void OnDestroy()
 		{
 			_destroes.ForEach(d => d?.OnDestroy());
+			_controllersForComponent.ForEach(cfc => cfc?.Deinit());
 			ClearAll();
 		}
 
-		void RegisterController(object controller) {
-			if ( controller is IAwake ) {
-				_awakes.Add(controller as IAwake);
-			}
-			if ( controller is IStart ) {
-				_startes.Add(controller as IStart);
-			}
-			if ( controller is IUpdate ) {
-				_updates.Add(controller as IUpdate);
-			}
-			if ( controller is IFixedUpdate ) {
-				_fixedUpdates.Add(controller as IFixedUpdate);
-			}
-			if ( controller is IDestroy ) {
-				_destroes.Add(controller as IDestroy);
+		void RegisterController(object controller)
+		{
+			TryAddControllerInList(_awakes, controller);
+			TryAddControllerInList(_startes, controller);
+			TryAddControllerInList(_updates, controller);
+			TryAddControllerInList(_fixedUpdates, controller);
+			TryAddControllerInList(_destroes, controller);
+			TryAddControllerInList(_controllersForComponent, controller);
+		}
+
+		void TryAddControllerInList<T>(List<T> list, object obj) where T : class
+		{
+			list.RemoveAll(elem => elem == null);
+			if (obj is T)
+			{
+				list.Add(obj as T);
 			}
 		}
 
-		void ClearAll() {
+		void ClearAll()
+		{
 			_awakes.Clear();
 			_startes.Clear();
 			_updates.Clear();
 			_fixedUpdates.Clear();
 			_destroes.Clear();
+			_controllersForComponent.Clear();
 		}
 	}
 }
