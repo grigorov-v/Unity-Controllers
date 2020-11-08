@@ -3,7 +3,5 @@
 namespace Grigorov.Controllers
 {
 	[AttributeUsage(AttributeTargets.Class)]
-	public class ControllerAttribute : Attribute
-	{
-	}
+	public class ControllerAttribute : Attribute { }
 }

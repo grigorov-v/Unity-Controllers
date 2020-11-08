@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,12 +10,18 @@ namespace Grigorov.Controllers
 
 		public void Init()
 		{
-			_components = Component.FindObjectsOfType<T>().ToList();
+			Clear();
+			AddComponents(Component.FindObjectsOfType<T>());
 		}
 
 		public void Deinit()
 		{
-			_components.Clear();
+			Clear();
+		}
+
+		protected void AddComponents(params T[] components)
+		{
+			Array.ForEach(components, component => AddComponent(component));
 		}
 
 		protected void AddComponent(T component)
@@ -39,6 +44,11 @@ namespace Grigorov.Controllers
 			{
 				action?.Invoke(component);
 			}
+		}
+
+		void Clear()
+		{
+			_components.Clear();
 		}
 	}
 }
