@@ -13,7 +13,6 @@ namespace Grigorov.Controllers
 		{
 			foreach (var controller in AllControllers)
 			{
-				(controller as IControllerForComponent)?.Init();
 				(controller as IAwake)?.OnAwake();
 			}
 			Instance = this;
@@ -48,7 +47,6 @@ namespace Grigorov.Controllers
 			foreach (var controller in AllControllers)
 			{
 				(controller as IDestroy)?.OnDestroy();
-				(controller as IControllerForComponent)?.Deinit();
 			}
 		}
 	}
