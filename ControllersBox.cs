@@ -7,8 +7,9 @@ namespace Grigorov.Unity.Controllers
 {
 	public static class ControllersBox
 	{
-		static Dictionary<Type, object> _allControllers = new Dictionary<Type, object>();
-		static Dictionary<Type, bool>   _initedStatuses = new Dictionary<Type, bool>();
+		static Dictionary<Type, object> _allControllers   = new Dictionary<Type, object>();
+		static Dictionary<Type, bool>   _initedStatuses   = new Dictionary<Type, bool>();
+		static UpdateController         _updateController = null;
 
 		public static Dictionary<Type, object> AllControllers
 		{
@@ -19,6 +20,18 @@ namespace Grigorov.Unity.Controllers
 					_allControllers = CreateAllControllers();
 				}
 				return _allControllers;
+			}
+		}
+
+		public static UpdateController UpdateController
+		{
+			get
+			{
+				if (_updateController == null)
+				{
+					_updateController = Get<UpdateController>();
+				}
+				return _updateController;
 			}
 		}
 

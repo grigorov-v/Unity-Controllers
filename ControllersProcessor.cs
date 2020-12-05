@@ -22,23 +22,30 @@ namespace Grigorov.Unity.Controllers
 					ControllersBox.ChangeInitedStatus(type);
 				}
 			}
+
+			foreach (var controller in AllControllers)
+			{
+				ControllersBox.UpdateController.AddUpdate(controller.Value as IUpdate);
+				ControllersBox.UpdateController.AddUpdate(controller.Value as ILateUpdate);
+				ControllersBox.UpdateController.AddUpdate(controller.Value as IFixedUpdate);
+			}
+
 			Instance = this;
 		}
 
 		void Update()
 		{
-			foreach (var controller in AllControllers)
-			{
-				(controller.Value as IUpdate)?.OnUpdate();
-			}
+			ControllersBox.UpdateController.Update();
+		}
+
+		void LateUpdate()
+		{
+			ControllersBox.UpdateController.LateUpdate();
 		}
 
 		void FixedUpdate()
 		{
-			foreach (var controller in AllControllers)
-			{
-				(controller.Value as IFixedUpdate)?.OnFixedUpdate();
-			}
+			ControllersBox.UpdateController.FixedUpdate();
 		}
 
 		void OnDestroy()
@@ -47,7 +54,15 @@ namespace Grigorov.Unity.Controllers
 			{
 				(controller.Value as IDeinit)?.OnDeinit();
 			}
+
 			ControllersBox.ResetInitedStatuses();
+
+			foreach (var controller in AllControllers)
+			{
+				ControllersBox.UpdateController.RemoveUpdate(controller.Value as IUpdate);
+				ControllersBox.UpdateController.RemoveUpdate(controller.Value as ILateUpdate);
+				ControllersBox.UpdateController.RemoveUpdate(controller.Value as IFixedUpdate);
+			}
 		}
 	}
 }
