@@ -1,4 +1,4 @@
-﻿namespace Grigorov.Controllers
+﻿namespace Grigorov.Unity.Controllers
 {
 	public interface IFixedUpdate
 	{

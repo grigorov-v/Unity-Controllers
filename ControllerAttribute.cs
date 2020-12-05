@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Grigorov.Controllers
+namespace Grigorov.Unity.Controllers
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public class ControllerAttribute : Attribute { }

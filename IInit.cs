@@ -1,7 +1,7 @@
 ﻿namespace Grigorov.Unity.Controllers
 {
-	public interface IUpdate
+	public interface IInit
 	{
-		void OnUpdate();
+		void OnInit();
 	}
 }

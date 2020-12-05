@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Grigorov.Controllers
+namespace Grigorov.Unity.Controllers
 {
 	[Controller]
 	public class UpdateController : IUpdate, IFixedUpdate

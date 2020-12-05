@@ -1,36 +1,35 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
-namespace Grigorov.Controllers
+namespace Grigorov.Unity.Controllers
 {
 	public class ControllersProcessor : MonoBehaviour
 	{
 		public static ControllersProcessor Instance { get; private set; }
 
-		List<object> AllControllers => Controller.AllControllers;
+		Dictionary<Type, object> AllControllers => ControllersBox.AllControllers;
 
 		void Awake()
 		{
 			foreach (var controller in AllControllers)
 			{
-				(controller as IAwake)?.OnAwake();
+				var type = controller.Key;
+				var controllerObj = controller.Value;
+				if (!ControllersBox.IsInitedController(type))
+				{
+					(controllerObj as IInit)?.OnInit();
+					ControllersBox.ChangeInitedStatus(type);
+				}
 			}
 			Instance = this;
-		}
-
-		void Start()
-		{
-			foreach (var controller in AllControllers)
-			{
-				(controller as IStart)?.OnStart();
-			}
 		}
 
 		void Update()
 		{
 			foreach (var controller in AllControllers)
 			{
-				(controller as IUpdate)?.OnUpdate();
+				(controller.Value as IUpdate)?.OnUpdate();
 			}
 		}
 
@@ -38,7 +37,7 @@ namespace Grigorov.Controllers
 		{
 			foreach (var controller in AllControllers)
 			{
-				(controller as IFixedUpdate)?.OnFixedUpdate();
+				(controller.Value as IFixedUpdate)?.OnFixedUpdate();
 			}
 		}
 
@@ -46,8 +45,9 @@ namespace Grigorov.Controllers
 		{
 			foreach (var controller in AllControllers)
 			{
-				(controller as IDestroy)?.OnDestroy();
+				(controller.Value as IDeinit)?.OnDeinit();
 			}
+			ControllersBox.ResetInitedStatuses();
 		}
 	}
 }
