@@ -1,7 +1,7 @@
 ﻿namespace Grigorov.Unity.Controllers
 {
-	public interface IDeinit
+	public interface IReset
 	{
-		void OnDeinit();
+		void OnReset();
 	}
 }
