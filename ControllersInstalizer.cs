@@ -30,7 +30,7 @@ namespace Grigorov.Unity.Controllers
 			_initedStatuses[controller.Key] = false;
 		}
 
-		public static Dictionary<Type, object> CreateAllControllers()
+		public static Dictionary<Type, object> CreateControllers()
 		{
 			var types = Assembly.GetExecutingAssembly()
 				.GetTypes()

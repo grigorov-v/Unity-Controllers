@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace Grigorov.Unity.Controllers
 {
 	public static class ControllersBox
 	{
-		static Dictionary<Type, object> _allControllers   = new Dictionary<Type, object>();
+		static Dictionary<Type, object> _controllers      = new Dictionary<Type, object>();
 		static UpdateController         _updateController = null;
 
-		public static Dictionary<Type, object> AllControllers
+		public static Dictionary<Type, object> Controllers
 		{
 			get
 			{
-				if (_allControllers.Count == 0)
+				if (_controllers.Count == 0)
 				{
-					_allControllers = ControllersInstalizer.CreateAllControllers();
+					_controllers = ControllersInstalizer.CreateControllers();
 				}
-				return _allControllers;
+				return _controllers;
 			}
 		}
 
@@ -37,7 +35,7 @@ namespace Grigorov.Unity.Controllers
 		public static T Get<T>() where T : class
 		{
 			var type = typeof(T);
-			var controller = AllControllers[type];
+			var controller = Controllers[type];
 			ControllersInstalizer.Init(type, controller);
 			return controller as T;
 		}

@@ -8,11 +8,11 @@ namespace Grigorov.Unity.Controllers
 	{
 		public static ControllersProcessor Instance { get; private set; }
 
-		Dictionary<Type, object> AllControllers => ControllersBox.AllControllers;
+		Dictionary<Type, object> Controllers => ControllersBox.Controllers;
 
 		void Awake()
 		{
-			foreach (var controller in AllControllers)
+			foreach (var controller in Controllers)
 			{
 				ControllersInstalizer.Init(controller);
 				ControllersBox.UpdateController.AddUpdate(controller.Value as IUpdate);
@@ -39,7 +39,7 @@ namespace Grigorov.Unity.Controllers
 
 		void OnDestroy()
 		{
-			foreach (var controller in AllControllers)
+			foreach (var controller in Controllers)
 			{
 				ControllersInstalizer.Reset(controller);
 				ControllersBox.UpdateController.RemoveUpdate(controller.Value as IUpdate);
