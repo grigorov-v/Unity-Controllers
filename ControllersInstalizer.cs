@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
+using UnityEngine;
+
 namespace Grigorov.Unity.Controllers
 {
 	public static class ControllersInstalizer
@@ -32,15 +34,19 @@ namespace Grigorov.Unity.Controllers
 
 		public static Dictionary<Type, object> CreateControllers()
 		{
+			var componentType = typeof(Component);
+			var attributeType = typeof(ControllerAttribute);
 			var types = Assembly.GetExecutingAssembly()
 				.GetTypes()
-				.Where(t => t.GetCustomAttributes(typeof(ControllerAttribute), true).Length > 0);
+				.Where(t => t.GetCustomAttributes(attributeType, true).Length > 0)
+				.Where(t => !t.IsSubclassOf(componentType));
 
 			var result = new Dictionary<Type, object>();
 			foreach (var type in types)
 			{
 				result[type] = Activator.CreateInstance(type);
 			}
+			
 			return result;
 		}
 
