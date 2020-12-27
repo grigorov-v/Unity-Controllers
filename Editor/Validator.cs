@@ -9,8 +9,8 @@ namespace Grigorov.Unity.Controllers.Editor
 {
 	public static class Validator
 	{
-		static Assembly Assembly => Assembly.Load("Assembly-CSharp");
-		static Type ComponentType => typeof(Component);
+		static Assembly Assembly      => Assembly.Load("Assembly-CSharp");
+		static Type     ComponentType => typeof(Component);
 
 		[DidReloadScripts]
 		static void OnScriptsReloaded()
