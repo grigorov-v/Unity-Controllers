@@ -11,40 +11,39 @@ namespace Grigorov.Unity.Controllers
 	{
 		static Dictionary<Type, bool> _initedStatuses = new Dictionary<Type, bool>();
 
-		public static void Init(KeyValuePair<Type, object> controller)
+		public static void Init(KeyValuePair<Type, IController> controller)
 		{
 			Init(controller.Key, controller.Value);
 		}
 
-		public static void Init(Type type, object controller)
+		public static void Init(Type type, IController controller)
 		{
 			if (IsInitedController(type))
 			{
 				return;
 			}
-			(controller as IInit)?.OnInit();
+			controller.OnInit();
 			_initedStatuses[type] = true;
 		}
 
-		public static void Reset(KeyValuePair<Type, object> controller)
+		public static void Reset(KeyValuePair<Type, IController> controller)
 		{
-			(controller.Value as IReset)?.OnReset();
+			controller.Value.OnReset();
 			_initedStatuses[controller.Key] = false;
 		}
 
-		public static Dictionary<Type, object> CreateControllers()
+		public static Dictionary<Type, IController> CreateControllers()
 		{
 			var componentType = typeof(Component);
-			var attributeType = typeof(ControllerAttribute);
 			var types = Assembly.GetExecutingAssembly()
 				.GetTypes()
-				.Where(t => t.GetCustomAttributes(attributeType, true).Length > 0)
+				.Where(t => CheckControllerInterface(t))
 				.Where(t => !t.IsSubclassOf(componentType));
 
-			var result = new Dictionary<Type, object>();
+			var result = new Dictionary<Type, IController>();
 			foreach (var type in types)
 			{
-				result[type] = Activator.CreateInstance(type);
+				result[type] = Activator.CreateInstance(type) as IController;
 			}
 			
 			return result;
@@ -53,6 +52,19 @@ namespace Grigorov.Unity.Controllers
 		static bool IsInitedController(Type typeController)
 		{
 			return _initedStatuses.ContainsKey(typeController) ? _initedStatuses[typeController] : false;
+		}
+
+		static bool CheckControllerInterface(Type type) {
+			var interfaces = type.GetInterfaces();
+			var controllerInterface = typeof(IController);
+			foreach (var intr in interfaces)
+			{
+				if (intr == controllerInterface)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }

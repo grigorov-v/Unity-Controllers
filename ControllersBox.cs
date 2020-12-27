@@ -5,10 +5,10 @@ namespace Grigorov.Unity.Controllers
 {
 	public static class ControllersBox
 	{
-		static Dictionary<Type, object> _controllers      = new Dictionary<Type, object>();
-		static UpdateController         _updateController = null;
+		static Dictionary<Type, IController> _controllers      = new Dictionary<Type, IController>();
+		static UpdateController              _updateController = null;
 
-		public static Dictionary<Type, object> Controllers
+		public static Dictionary<Type, IController> Controllers
 		{
 			get
 			{

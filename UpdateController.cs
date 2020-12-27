@@ -2,13 +2,16 @@
 
 namespace Grigorov.Unity.Controllers
 {
-	[Controller]
-	public class UpdateController
+	public class UpdateController : IController
 	{
 		List<IUpdate>      _targetsUpdate      = new List<IUpdate>();
 		List<ILateUpdate>  _targetsLateUpdate  = new List<ILateUpdate>();
 		List<IFixedUpdate> _targetsFixedUpdate = new List<IFixedUpdate>();
-		
+
+		public void OnInit() { }
+
+		public void OnReset() { }
+
 		public void Update()
 		{
 			foreach (var upd in _targetsUpdate)
@@ -17,7 +20,7 @@ namespace Grigorov.Unity.Controllers
 			}
 		}
 
-	   public void LateUpdate()
+		public void LateUpdate()
 		{
 			foreach (var upd in _targetsLateUpdate)
 			{

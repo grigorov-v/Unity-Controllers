@@ -11,25 +11,11 @@ namespace Grigorov.Unity.Controllers.Editor
 	{
 		static Assembly Assembly => Assembly.Load("Assembly-CSharp");
 		static Type ComponentType => typeof(Component);
-		static Type AttributeType => typeof(ControllerAttribute);
 
 		[DidReloadScripts]
 		static void OnScriptsReloaded()
 		{
-			CheckAttributeInComponents();
 			CheckInterfacesInComponents();
-		}
-
-		static void CheckAttributeInComponents()
-		{
-			var componentsWithAttribute = Assembly.GetTypes()
-				.Where(t => t.GetCustomAttributes(AttributeType, true).Length > 0)
-				.Where(t => t.IsSubclassOf(ComponentType));
-
-			foreach (var component in componentsWithAttribute)
-			{
-				Debug.LogErrorFormat("<b>[{0}]</b> Attribute <b>[{1}]</b> doesn't work with unity component", component.Name, AttributeType.Name);
-			}
 		}
 
 		static void CheckInterfacesInComponents()
@@ -53,20 +39,6 @@ namespace Grigorov.Unity.Controllers.Editor
 				if (CheckInterface(component, typeof(IFixedUpdate)) && MethodExists(component, "FixedUpdate"))
 				{
 					Debug.LogErrorFormat(log, component.Name, "FixedUpdate", "IFixedUpdate.OnFixedUpdate");
-				}
-			}
-
-			log = "<b>[{0}]</b> Interface <b>[{1}]</b> not compatible with unity component";
-			foreach (var component in components)
-			{
-				if (CheckInterface(component, typeof(IInit)))
-				{
-					Debug.LogErrorFormat(log, component.Name, typeof(IInit).Name);
-				}
-
-				if (CheckInterface(component, typeof(IReset)))
-				{
-					Debug.LogErrorFormat(log, component.Name, typeof(IReset).Name);
 				}
 			}
 		}
