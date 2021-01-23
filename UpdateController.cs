@@ -2,13 +2,23 @@
 
 namespace Grigorov.Unity.Controllers {
 	public class UpdateController : IController {
-		readonly List<IFixedUpdate> _targetsFixedUpdate = new List<IFixedUpdate>();
-		readonly List<ILateUpdate> _targetsLateUpdate = new List<ILateUpdate>();
-		readonly List<IUpdate> _targetsUpdate = new List<IUpdate>();
+		public bool IsActive => true;
+		
+		List<IFixedUpdate> _targetsFixedUpdate;
+		List<ILateUpdate>  _targetsLateUpdate;
+		List<IUpdate>      _targetsUpdate;
 
-		public void OnInit() { }
+		public void OnInit() {
+			_targetsFixedUpdate = new List<IFixedUpdate>();
+			_targetsLateUpdate  = new List<ILateUpdate>();
+			_targetsUpdate      = new List<IUpdate>();
+		}
 
-		public void OnReset() { }
+		public void OnReset() {
+			_targetsFixedUpdate = null;
+			_targetsLateUpdate  = null;
+			_targetsUpdate      = null;
+		}
 
 		public void Update() {
 			foreach ( var upd in _targetsUpdate ) {
@@ -76,7 +86,7 @@ namespace Grigorov.Unity.Controllers {
 			_targetsFixedUpdate.Remove(target);
 		}
 
-		bool CheckNull(object obj) {
+		static bool CheckNull(object obj) {
 			return obj == null;
 		}
 	}

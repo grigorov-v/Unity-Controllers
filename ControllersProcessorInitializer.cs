@@ -2,18 +2,9 @@
 using UnityEngine.SceneManagement;
 
 namespace Grigorov.Unity.Controllers {
-	public static class ControllersProcessorInstalizer {
+	public static class ControllersProcessorInitializer {
 		const string ControllersProcessorName = "[ControllersProcessor]";
-
-		public static ControllersProcessor TryFindOrCreateControllersProcessor() {
-			var processor = Object.FindObjectOfType<ControllersProcessor>();
-			if ( processor ) {
-				return processor;
-			}
-
-			return new GameObject(ControllersProcessorName).AddComponent<ControllersProcessor>();
-		}
-
+		
 		[RuntimeInitializeOnLoadMethod]
 		static void OnRuntimeInitializeOnLoad() {
 			TryFindOrCreateControllersProcessor();
@@ -23,6 +14,11 @@ namespace Grigorov.Unity.Controllers {
 
 		static void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
 			TryFindOrCreateControllersProcessor();
+		}
+		
+		static ControllersProcessor TryFindOrCreateControllersProcessor() {
+			var processor = Object.FindObjectOfType<ControllersProcessor>();
+			return processor ? processor : new GameObject(ControllersProcessorName).AddComponent<ControllersProcessor>();
 		}
 	}
 }

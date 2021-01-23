@@ -6,11 +6,9 @@ namespace Grigorov.Unity.Controllers {
 	public class ControllersProcessor : MonoBehaviour {
 		public static ControllersProcessor Instance { get; private set; }
 
-		Dictionary<Type, IController> Controllers => ControllersBox.Controllers;
-
 		void Awake() {
-			foreach ( var controller in Controllers ) {
-				ControllersInstalizer.Init(controller);
+			foreach ( var controller in ControllersBox.Controllers ) {
+				ControllersInitializer.Init(controller);
 			}
 
 			Instance = this;
@@ -29,8 +27,8 @@ namespace Grigorov.Unity.Controllers {
 		}
 
 		void OnDestroy() {
-			foreach ( var controller in Controllers ) {
-				ControllersInstalizer.Reset(controller);
+			foreach ( var controller in ControllersBox.Controllers ) {
+				ControllersInitializer.Reset(controller);
 			}
 		}
 	}

@@ -9,27 +9,19 @@ namespace Grigorov.Unity.Controllers {
 		public static Dictionary<Type, IController> Controllers {
 			get {
 				if ( _controllers.Count == 0 ) {
-					_controllers = ControllersInstalizer.CreateControllers();
+					_controllers = ControllersInitializer.CreateControllers();
 				}
 
 				return _controllers;
 			}
 		}
 
-		public static UpdateController UpdateController {
-			get {
-				if ( _updateController == null ) {
-					_updateController = Get<UpdateController>();
-				}
-
-				return _updateController;
-			}
-		}
+		public static UpdateController UpdateController => _updateController ?? (_updateController = Get<UpdateController>());
 
 		public static T Get<T>() where T : class {
 			var type = typeof(T);
 			var controller = Controllers[type];
-			ControllersInstalizer.Init(type, controller);
+			ControllersInitializer.Init(type, controller);
 			return controller as T;
 		}
 	}
